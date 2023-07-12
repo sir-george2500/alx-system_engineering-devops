@@ -1,2 +1,2 @@
 #!/bin/bash
-echo "obase=bestchol; $((2#$WATER + 2#$STIR))" | bc
+printf "%s" "$(printf "%o" "$((2#"$WATER" + 2#"$STIR"))" | awk '{gsub(/./, "bestchol&"); print}')"
