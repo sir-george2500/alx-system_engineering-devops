@@ -1,35 +1,20 @@
-#!/usr/bin/env bash
-# Installs Nginx with the following configurations:
-#+    Listens on port 80.
-#+    Returns a page containing "Holberton School" when queried
-#+     at the root with a curl GET request.
-# Configures /redirect_me as a "301 Moved Permanently".
-# Includes a custom 404 page containing "Ceci n'est pas une page".
+#!/bin/bash
 
-apt-get update
-apt-get install -y nginx
+# Update package lists
+sudo apt update
 
-mkdir /etc/nginx/html
-touch /etc/nginx/html/index.html
-echo "Holberton School" > /etc/nginx/html/index.html
-touch /etc/nginx/html/404.html
-echo "page not found" > /etc/nginx/html/404.html
+# Install Nginx
+sudo apt install nginx -y
 
-printf %s "server {
-    listen 80;
-    listen [::]:80 default_server;
-    root   /etc/nginx/html;
-    index  index.html index.htm;
+# Create a custom 404 page
+sudo sh -c "echo '<!DOCTYPE html><html><head><title>Error 404</title></head><body>404 Page Not Found</body></html>' > /var/www/html/404.html"
 
-    location /redirect_me {
-        return 301 http://cuberule.com/;
-    }
+# Configure Nginx to use the custom 404 page
+sudo sed -i '/^\s*server {/a \\terror_page 404 /404.html;' /etc/nginx/sites-available/default
 
-    error_page 404 /404.html;
-    location /404 {
-      root /etc/nginx/html;
-      internal;
-    }
-}" > /etc/nginx/sites-available/default
+# Test Nginx configuration
+sudo nginx -t
 
-service nginx restart
+# Reload Nginx to apply changes
+sudo systemctl reload nginx
+
