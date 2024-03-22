@@ -1,1 +1,4 @@
-# 0x14-mysql
+# 0x14. MySQL
+
+
+Install Mysql on your server
